@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cripto Moedas</title>
+</head>
+
+<body>
+  <script>
+    const apiKey = { key: '52ba358e-c4d8-4f30-bed3-84a0c03e6754' };
+    let address = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/map?CMC_PRO_API_KEY=${apiKey.key}`;
+    fetch(address).then((response) => {
+      if (!response.ok) throw new Error(`Erro ao requisitar, statos ${response.status}`);
+      return response.json();
+    })
+      .then((api) => {
+        console.log(api);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  </script>
+</body>
+
+</html>
