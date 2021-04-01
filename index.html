@@ -6,22 +6,68 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cripto Moedas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 </head>
 
 <body>
+  <div id="app">
+    <div class="container pt-5">
+      <h1>Cripto Moedas</h1>
+      <h2>#DigitalInnovationOneChalenge</h2>
+      <div class="row">
+        <div class="col-md-3 col-12" v-for="element in apiData">
+          <div class="card mt-2">
+            <div class="card-body">
+              <h5 class="card-title">{{element.name}}</h5>
+              <p class="card-text">{{element.symbol}}</p>
+              <p class="card-text">Ranking:{{element.rank}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-end">
+        <button class="btn btn-primary mt-2 btn-lg ml-auto" @click="consultaAPI(start)">Ver mais</button>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script>
-    const apiKey = { key: '52ba358e-c4d8-4f30-bed3-84a0c03e6754' };
-    let address = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/map?CMC_PRO_API_KEY=${apiKey.key}`;
-    fetch(address).then((response) => {
-      if (!response.ok) throw new Error(`Erro ao requisitar, statos ${response.status}`);
-      return response.json();
-    })
-      .then((api) => {
-        console.log(api);
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
+    let app = new Vue({
+      el: '#app',
+      data: function () {
+        return {
+          apikey: '52ba358e-c4d8-4f30-bed3-84a0c03e6754',
+          apiData: [],
+          start: 9
+        }
+      },
+      mounted() {
+        this.consultaAPI();
+      },
+      methods: {
+        consultaAPI: function (limit = 9) {
+          let address = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/map?CMC_PRO_API_KEY=${this.apikey}`;
+          fetch(address).then((response) => {
+            if (!response.ok) throw new Error(`Erro ao requisitar, statos ${response.status}`);
+            return response.json();
+          }).then((api) => {
+            var map = api.data.filter((el, index) => {
+              if (index < limit) return el;
+            });
+            console.log(map);
+            this.apiData = map;
+
+          }).catch((error) => {
+            console.error(error.message);
+          });
+          this.start += 3;
+        }
+      }
+    });
   </script>
 </body>
 
